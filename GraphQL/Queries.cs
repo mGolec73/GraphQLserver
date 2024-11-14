@@ -14,7 +14,7 @@ namespace GraphQLserver.GraphQL
         /// </summary>
         /// <param name="context">The database context used to retrieve customer data.</param>
         /// <returns>An IQueryable list of Customer objects with related country, ticket purchases, and venue data.</returns>
-        ///  [GraphQLDescription("Retrieves a list of countries, including their associated venues and customers.")]
+        [GraphQLDescription("Retrieves a list of countries, including their associated venues and customers.")]
         [UseFiltering]
         [UseSorting]
 
