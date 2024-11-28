@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GraphQLserver.Models;
-using HotChocolate.AspNetCore;
 using GraphQLserver.GraphQL;
+using Microsoft.AspNetCore.HttpOverrides;
 //using HotChocolate.AspNetCore.Playground;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,19 @@ builder.Services
     .AddSorting();
 
 var app = builder.Build();
+
+#region Needed for nginx and Kestrel (do not remove or change this region)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+  ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                     ForwardedHeaders.XForwardedProto
+});
+string? pathBase = app.Configuration["PathBase"];
+if (!string.IsNullOrWhiteSpace(pathBase))
+{
+  app.UsePathBase(pathBase);
+}
+#endregion
 
 // Map GraphQL and Playground endpoints
 app.MapGraphQL();

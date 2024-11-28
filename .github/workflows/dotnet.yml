@@ -72,7 +72,7 @@ jobs:
       with:
         file: ${{ steps.variables.outputs.publish-folder }}/appsettings.json
         field: PathBase
-        value: /apps/p2024-api
+        value: /p2024-api
     - name: Compress      
       run: |
         cd ${{ steps.variables.outputs.publish-folder }}
