@@ -40,11 +40,11 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: |
-        cd ${{ env.PROJECT-FOLDER }}
+       # cd ${{ env.PROJECT-FOLDER }}
         dotnet restore
     - name: Build
       run: |
-        cd ${{ env.PROJECT-FOLDER }}
+       # cd ${{ env.PROJECT-FOLDER }}
         dotnet build --configuration Release --no-restore
     #- name: Test          
     #  run: |
@@ -52,7 +52,7 @@ jobs:
     #    dotnet test --no-build --verbosity normal
     - name: Publish      
       run: |
-        cd ${{ env.PROJECT-FOLDER }}
+       # cd ${{ env.PROJECT-FOLDER }}
         #dotnet publish -c=Release -o='${{ steps.variables.outputs.publish-folder }}'
         dotnet publish -c=Release --property:PublishDir=${{ steps.variables.outputs.publish-folder }}
     - name: Change connection string in appsettings.json      
