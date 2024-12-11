@@ -10,6 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BMProjekt2024Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("baza")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // Register GraphQL services
 builder.Services
     .AddGraphQLServer()
@@ -33,6 +44,8 @@ if (!string.IsNullOrWhiteSpace(pathBase))
   app.UsePathBase(pathBase);
 }
 #endregion
+
+app.UseCors("AllowLocalHost");
 
 // Map GraphQL and Playground endpoints
 app.MapGraphQL();
