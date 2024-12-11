@@ -16,7 +16,6 @@
     <PackageReference Include="HotChocolate.AspNetCore" Version="14.1.0" />
     <PackageReference Include="HotChocolate.Data" Version="14.1.0" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="14.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
       <PrivateAssets>all</PrivateAssets>
