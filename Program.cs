@@ -45,10 +45,9 @@ if (!string.IsNullOrWhiteSpace(pathBase))
 }
 #endregion
 
+
 app.UseCors("AllowLocalhost");
 
-// Map GraphQL and Playground endpoints
+// Map GraphQL 
 app.MapGraphQL();
-//app.MapGraphQLPlayground(); // optional, for testing in the Playground UI
-
 app.Run();
