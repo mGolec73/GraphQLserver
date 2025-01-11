@@ -2,7 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using GraphQLserver.Models;
 using GraphQLserver.GraphQL;
 using Microsoft.AspNetCore.HttpOverrides;
-//using HotChocolate.AspNetCore.Playground;
+using GraphQLserver.Services;
+using GraphQLserver.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+builder.Services.AddHttpContextAccessor(); // Provides access to HttpContext
+builder.Services.AddScoped<ITenantIdResolverService, HeaderTenantIdResolverService>();
 
 // Register GraphQL services
 builder.Services
@@ -28,7 +31,8 @@ builder.Services
     .AddQueryType<Queries>()
     .AddProjections()
     .AddFiltering()
-    .AddSorting();
+    .AddSorting()
+    .UseField<GraphQLTenantMiddleware>(); 
 
 var app = builder.Build();
 

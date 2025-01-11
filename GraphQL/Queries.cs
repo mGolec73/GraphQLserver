@@ -3,6 +3,9 @@ using HotChocolate;
 using HotChocolate.Data;
 using GraphQLserver.Models;
 using Microsoft.EntityFrameworkCore;
+using GraphQLserver.Services;
+using GraphQLserver.Middleware;
+using Microsoft.Extensions.Logging;
 
 
 namespace GraphQLserver.GraphQL
@@ -17,10 +20,23 @@ namespace GraphQLserver.GraphQL
         [GraphQLDescription("Retrieves a list of countries, including their associated venues and customers.")]
         [UseFiltering]
         [UseSorting]
-
-        public IQueryable<Country> GetCountries([Service] BMProjekt2024Context context) => context.Countries
+        public IQueryable<Country> GetCountries([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
+        {
+            var tenantId = tenantIdResolver.TenantId;
+            if (tenantId == null)
+            {
+                Console.WriteLine("TenantId not found");
+            }
+            else
+            {
+                Console.WriteLine($"TenantId found: {tenantId}");
+            }
+            return context.Countries
             .Include(e => e.Venues)
-            .Include(e => e.Customers);
+            .Include(e => e.Customers)
+            .Where(e => e.Venues.Any(venue => venue.VenueId == tenantId));
+
+        }
 
         /// <summary>
         /// Retrieves a list of customers, including details about their country, ticket purchases, and associated venue.
@@ -108,11 +124,25 @@ namespace GraphQLserver.GraphQL
         [UseFiltering]
         [UseSorting]
         [GraphQLDescription("Retrieves a list of venues with support for filtering and sorting, including details about the country, associated customers, events, sections, and venue type.")]
-        public IQueryable<Venue> GetVenues([Service] BMProjekt2024Context context) => context.Venues
+        public IQueryable<Venue> GetVenues([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
+        {
+            var tenantId = tenantIdResolver.TenantId;
+            if (tenantId == null)
+            {
+                Console.WriteLine("TenantId not found");
+            }
+            else
+            {
+                Console.WriteLine($"TenantId found: {tenantId}");
+            }
+
+            return context.Venues
             .Include(e => e.CountryCodeNavigation)
             .Include(e => e.Customers)
             .Include(e => e.Events)
             .Include(e => e.Sections)
-            .Include(e => e.VenueTypeNavigation); 
+            .Include(e => e.VenueTypeNavigation)
+            .Where(e => e.VenueId == tenantId);
+        }
     }
 }
