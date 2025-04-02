@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using GraphQLserver.Middleware;
+using GraphQLserver.Services;
 
 namespace GraphQLserver.Models;
 

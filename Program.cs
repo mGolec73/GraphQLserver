@@ -29,10 +29,11 @@ builder.Services
     .AddGraphQLServer()
     .RegisterDbContextFactory<BMProjekt2024Context>()
     .AddQueryType<Queries>()
+    .AddType<CountryType>()
     .AddProjections()
     .AddFiltering()
     .AddSorting()
-    .UseField<GraphQLTenantMiddleware>(); 
+    .UseField<GraphQLTenantMiddleware>();
 
 var app = builder.Build();
 
