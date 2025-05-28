@@ -21,11 +21,7 @@ namespace GraphQLserver.GraphQL
 {
   public class Queries
   {
-    /// <summary>
-    /// Retrieves a list of customers, including details about their country, ticket purchases, and associated venue.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve customer data.</param>
-    /// <returns>An IQueryable list of Customer objects with related country, ticket purchases, and venue data.</returns>
+
     [GraphQLDescription("Retrieves a list of countries, including their associated venues and customers.")]
     [UseProjection]
     [UseFiltering]
@@ -44,11 +40,7 @@ namespace GraphQLserver.GraphQL
       return context.Countries;
     }
 
-    /// <summary>
-    /// Retrieves a list of customers, including details about their country, ticket purchases, and associated venue.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve customer data.</param>
-    /// <returns>An IQueryable list of Customer objects with related country, ticket purchases, and venue data.</returns>
+
     [GraphQLDescription("Retrieves a list of customers, including details about their country, ticket purchases, and associated venue.")]
     [UseFiltering]
     [UseSorting]
@@ -58,11 +50,7 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.Venue);
 
 
-    /// <summary>
-    /// Retrieves a list of event sections with support for filtering and sorting, including details about the event, section, and associated tickets.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve event section data.</param>
-    /// <returns>An IQueryable list of EventSection objects with related event, section, and ticket data.</returns>
+
     [GraphQLDescription("Retrieves a list of event sections with support for filtering and sorting, including details about the event, section, and associated tickets.")]
     [UseFiltering]
     [UseSorting]
@@ -71,11 +59,7 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.Section)
         .Include(e => e.Tickets);
 
-    /// <summary>
-    /// Retrieves a list of events with support for filtering and sorting, including associated event sections and venue data.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve event data.</param>
-    /// <returns>An IQueryable list of Event objects with related event sections and venue data.</returns>
+   
     [UseFiltering]
     [UseSorting]
     [GraphQLDescription("Retrieves a list of events with support for filtering and sorting, including associated event sections and venue data.")]
@@ -84,11 +68,7 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.Venue);
 
 
-    /// <summary>
-    /// Retrieves a list of sections with support for filtering and sorting, including associated event sections and venue data.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve section data.</param>
-    /// <returns>An IQueryable list of Section objects with related event sections and venue data.</returns>
+  
     [UseFiltering]
     [UseSorting]
     [GraphQLDescription("Retrieves a list of sections with support for filtering and sorting, including associated event sections and venue data.")]
@@ -97,11 +77,6 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.Venue);
 
 
-    /// <summary>
-    /// Retrieves a list of tickets with support for filtering and sorting, including associated event sections and ticket purchase data.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve ticket data.</param>
-    /// <returns>An IQueryable list of Ticket objects with related event sections and ticket purchase data.</returns>
     [UseFiltering]
     [UseSorting]
     [GraphQLDescription("Retrieves a list of tickets with support for filtering and sorting, including associated event sections and ticket purchase data.")]
@@ -110,11 +85,7 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.TicketPurchases);
 
 
-    /// <summary>
-    /// Retrieves a list of venue types with support for filtering and sorting, including associated venues.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve venue type data.</param>
-    /// <returns>An IQueryable list of VenueType objects with related venue data.</returns>
+    
     [UseFiltering]
     [UseSorting]
     [GraphQLDescription("Retrieves a list of venue types with support for filtering and sorting, including associated venues.")]
@@ -122,11 +93,6 @@ namespace GraphQLserver.GraphQL
         .Include(e => e.Venues);
 
 
-    /// <summary>
-    /// Retrieves a list of venues with support for filtering and sorting, including details about the country, associated customers, events, sections, and venue type.
-    /// </summary>
-    /// <param name="context">The database context used to retrieve venue data.</param>
-    /// <returns>An IQueryable list of Venue objects with related country, customer, event, section, and venue type data.</returns>
     [UseFiltering]
     [UseSorting]
     [GraphQLDescription("Retrieves a list of venues with support for filtering and sorting, including details about the country, associated customers, events, sections, and venue type.")]
