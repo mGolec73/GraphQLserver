@@ -9,14 +9,14 @@ namespace GraphQLserver.Services
             var parameter = Expression.Parameter(typeof(T), "x");
             var bindings = new List<MemberBinding>();
 
-            // Always include the primary key (assuming it's named "Id")
+            
             var idProperty = typeof(T).GetProperty("Id");
             if (idProperty != null)
             {
                 bindings.Add(Expression.Bind(idProperty, Expression.Property(parameter, idProperty)));
             }
 
-            // Dynamically add only selected fields
+            
             foreach (var field in selectedFields)
             {
                 var property = typeof(T).GetProperty(field, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
@@ -26,7 +26,7 @@ namespace GraphQLserver.Services
                 }
             }
 
-            // Create a lambda expression: new T { SelectedFields }
+            
             var newExpression = Expression.MemberInit(Expression.New(typeof(T)), bindings);
             var lambda = Expression.Lambda<Func<T, T>>(newExpression, parameter);
 
