@@ -106,10 +106,6 @@ namespace GraphQLserver.GraphQL
             return context.Venues.Where(e => e.VenueId == tenantId);
         }
     }
-      .Include(e => e.Events)
-      .Include(e => e.Sections)
-      .Include(e => e.VenueTypeNavigation)
-      .Where(e => e.VenueId == tenantId);
-    }
-  }
+   
+  
 }
