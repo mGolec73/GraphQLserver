@@ -29,7 +29,7 @@ builder.Services
     .AddGraphQLServer()
     .RegisterDbContextFactory<BMProjekt2024Context>()
     .AddQueryType<Queries>()
-    .AddType<CountryType>()
+ 
     .AddProjections()
     .AddFiltering()
     .AddSorting()

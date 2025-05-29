@@ -10,13 +10,16 @@ namespace GraphQLserver.Models;
 
 public partial class BMProjekt2024Context : DbContext
 {
+    private readonly int? _tenantId;
+
     public BMProjekt2024Context()
     {
     }
 
-    public BMProjekt2024Context(DbContextOptions<BMProjekt2024Context> options)
+    public BMProjekt2024Context(DbContextOptions<BMProjekt2024Context> options, [Service] ITenantIdResolverService tenantidresolver)
         : base(options)
     {
+        _tenantId = tenantidresolver.TenantId;
     }
 
     public virtual DbSet<Country> Countries { get; set; }
@@ -246,6 +249,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.Property(e => e.VenueTypeName)
                 .IsRequired()
                 .HasMaxLength(30);
+            
         });
 
         modelBuilder.Entity<Venue>(entity =>
@@ -283,6 +287,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => d.VenueType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Venues_VenueTypes");
+            entity.HasQueryFilter(v => v.VenueId == _tenantId);
         });
 
         OnModelCreatingPartial(modelBuilder);

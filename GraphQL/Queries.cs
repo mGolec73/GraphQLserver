@@ -8,7 +8,6 @@ using GraphQLserver.Middleware;
 using Microsoft.Extensions.Logging;
 using System;
 using Microsoft.EntityFrameworkCore.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using HotChocolate.Resolvers;
 using GraphQL;
 using HotChocolate.Execution.Processing;
@@ -51,25 +50,21 @@ namespace GraphQLserver.GraphQL
             return fields;
         }
 
-      
-        [GraphQLDescription("Retrieves a list of countries, including their associated venues and customers.")]
 
-        public async Task<List<Country>> GetCountriesAsync(
+
+        [UseProjection]
+        public IQueryable<Country> GetCountries(
          [Service] BMProjekt2024Context dbContext,
          IResolverContext context, [Service] ITenantIdResolverService tenantIdResolver)
         {
-            var selectedFields = GetRequestedFields(context);
             var tenantId = tenantIdResolver.TenantId;
             var countries = dbContext.Countries
-                .Where(c => c.Venues.Any(v => v.VenueId == tenantId))
-                .AsNoTracking();
-
-            var fq = countries.SelectDynamic(selectedFields);
-            return await fq.ToListAsync();
+                .Where(c => c.Venues.Any(v => v.VenueId == tenantId));
+            return  countries;
         }
 
         
-        [GraphQLDescription("Retrieves a list of customers, including details about their country, ticket purchases, and associated venue.")]
+        
         [UseProjection]
         [UseFiltering]
         [UseSorting]
@@ -78,7 +73,7 @@ namespace GraphQLserver.GraphQL
             return context.Customers.Where(cu => cu.VenueId == tenantId); 
         }
  
-        [GraphQLDescription("Retrieves a list of event sections with support for filtering and sorting, including details about the event, section, and associated tickets.")]
+        
         [UseProjection]
         [UseFiltering]
         [UseSorting]
@@ -90,8 +85,7 @@ namespace GraphQLserver.GraphQL
         
         [UseProjection]
         [UseFiltering]
-        [UseSorting]
-        [GraphQLDescription("Retrieves a list of events with support for filtering and sorting, including associated event sections and venue data.")]
+        [UseSorting]  
         public IQueryable<Event> GetEvents([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
@@ -101,7 +95,6 @@ namespace GraphQLserver.GraphQL
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        [GraphQLDescription("Retrieves a list of sections with support for filtering and sorting, including associated event sections and venue data.")]
         public IQueryable<Section> GetSections([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
@@ -111,7 +104,6 @@ namespace GraphQLserver.GraphQL
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        [GraphQLDescription("Retrieves a list of tickets with support for filtering and sorting, including associated event sections and ticket purchase data.")]
         public IQueryable<Ticket> GetTickets([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
@@ -121,13 +113,11 @@ namespace GraphQLserver.GraphQL
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        [GraphQLDescription("Retrieves a list of venue types with support for filtering and sorting, including associated venues.")]
         public IQueryable<VenueType_> GetVenueTypes([Service] BMProjekt2024Context context) => context.VenueTypes;
         
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        [GraphQLDescription("Retrieves a list of venues with support for filtering and sorting, including details about the country, associated customers, events, sections, and venue type.")]
         public IQueryable<Venue> GetVenues([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
