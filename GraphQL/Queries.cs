@@ -30,8 +30,8 @@ namespace GraphQLserver.GraphQL
          IResolverContext context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
-            var countries = dbContext.Countries
-                .Where(c => c.Venues.Any(v => v.VenueId == tenantId));
+            var countries = dbContext.Countries;
+            //Where(c => c.Venues.Any(v => v.VenueId == tenantId));
             return  countries;
         }
 
