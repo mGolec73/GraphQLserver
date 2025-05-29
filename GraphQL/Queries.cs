@@ -21,38 +21,10 @@ namespace GraphQLserver.GraphQL
    
     public class Queries
     {
-        private static HashSet<string> GetRequestedFields(IResolverContext context)
-        {
-            var fields = new HashSet<string>();
-
-            void ExtractFields(IEnumerable<HotChocolate.Language.ISelectionNode> selections, string parentPath = null)
-            {
-                foreach (var selection in selections)
-                {
-                    if (selection is HotChocolate.Language.FieldNode fieldNode)
-                    {
-                        var fieldPath = parentPath == null ? fieldNode.Name.Value : $"{parentPath}.{fieldNode.Name.Value}";
-                        fields.Add(fieldPath);
-
-                        if (fieldNode.SelectionSet?.Selections != null)
-                        {
-                            ExtractFields(fieldNode.SelectionSet.Selections, fieldPath);
-                        }
-                    }
-                }
-            }
-
-            if (context.Selection.SyntaxNode.SelectionSet?.Selections != null)
-            {
-                ExtractFields(context.Selection.SyntaxNode.SelectionSet.Selections);
-            }
-
-            return fields;
-        }
-
-
-
+      
         [UseProjection]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<Country> GetCountries(
          [Service] BMProjekt2024Context dbContext,
          IResolverContext context, [Service] ITenantIdResolverService tenantIdResolver)
@@ -109,11 +81,14 @@ namespace GraphQLserver.GraphQL
             var tenantId = tenantIdResolver.TenantId;
             return context.Tickets.Where(t => t.VenueId == tenantId);
         }
-  
+
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<VenueType_> GetVenueTypes([Service] BMProjekt2024Context context) => context.VenueTypes;
+        public IQueryable<VenueType_> GetVenueTypes([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver) {
+
+            var tenantId = tenantIdResolver.TenantId;
+            return context.VenueTypes.Where(c => c.Venues.Any(v => v.VenueId == tenantId)); ; }
         
         [UseProjection]
         [UseFiltering]

@@ -102,6 +102,8 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Customers_Venues");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+
         });
 
         modelBuilder.Entity<EventSection>(entity =>
@@ -121,6 +123,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => new { d.VenueId, d.SectionId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventSections_Sections");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -142,6 +145,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Events_Venues");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
         });
 
         modelBuilder.Entity<LastExtracted>(entity =>
@@ -189,6 +193,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Sections_Venues");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
         });
 
         modelBuilder.Entity<TicketPurchase>(entity =>
@@ -207,6 +212,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => new { d.VenueId, d.CustomerId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TicketPurchases_Customers");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
         });
 
         modelBuilder.Entity<Ticket>(entity =>
@@ -225,6 +231,7 @@ public partial class BMProjekt2024Context : DbContext
                 .HasForeignKey(d => new { d.VenueId, d.EventId, d.SectionId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Tickets_EventSections");
+            entity.HasQueryFilter(c => c.VenueId == _tenantId);
         });
 
         modelBuilder.Entity<VenueType_>(entity =>
