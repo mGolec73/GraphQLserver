@@ -21,7 +21,7 @@ public partial class Ticket
 
     public int TicketPurchaseId { get; set; }
 
-    public virtual EventSection EventSections { get; set; }
+    public virtual EventSection EventSection { get; set; }
 
-    public virtual TicketPurchase TicketPurchases { get; set; }
+    public virtual TicketPurchase TicketPurchase { get; set; }
 }

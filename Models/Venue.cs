@@ -31,5 +31,5 @@ public partial class Venue
 
     public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
 
-    public virtual VenueType_ VenueTypeNavigation { get; set; }
+    public virtual VenueType VenueTypeNavigation { get; set; }
 }

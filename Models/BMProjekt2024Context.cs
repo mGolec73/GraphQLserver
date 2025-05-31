@@ -3,41 +3,35 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using GraphQLserver.Middleware;
-using GraphQLserver.Services;
 
 namespace GraphQLserver.Models;
 
 public partial class BMProjekt2024Context : DbContext
 {
-    
-
     public BMProjekt2024Context(DbContextOptions<BMProjekt2024Context> options)
         : base(options)
     {
-        
     }
 
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
 
-    public virtual DbSet<EventSection> EventSections { get; set; }
-
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<LastExtracted> LastExtracted { get; set; }
+    public virtual DbSet<EventSection> EventSections { get; set; }
+
+    public virtual DbSet<LastExtracted> LastExtracteds { get; set; }
 
     public virtual DbSet<Section> Sections { get; set; }
 
-    public virtual DbSet<TicketPurchase> TicketPurchases { get; set; }
-
     public virtual DbSet<Ticket> Tickets { get; set; }
 
-    public virtual DbSet<VenueType_> VenueTypes { get; set; }
+    public virtual DbSet<TicketPurchase> TicketPurchases { get; set; }
 
     public virtual DbSet<Venue> Venues { get; set; }
 
+    public virtual DbSet<VenueType> VenueTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -97,27 +91,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Customers)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Customers_Venues");            
-
-        });
-
-        modelBuilder.Entity<EventSection>(entity =>
-        {
-            entity.HasKey(e => new { e.VenueId, e.EventId, e.SectionId }).HasName("PK__EventSec__5843467B739222C2");
-
-            entity.Property(e => e.Price).HasColumnType("money");
-            entity.Property(e => e.RowVersion)
-                .IsRowVersion()
-                .IsConcurrencyToken();
-
-            entity.HasOne(d => d.Event).WithMany(p => p.EventSections)
-                .HasForeignKey(d => new { d.VenueId, d.EventId })
-                .HasConstraintName("FK_EventSections_Events");
-
-            entity.HasOne(d => d.Section).WithMany(p => p.EventSections)
-                .HasForeignKey(d => new { d.VenueId, d.SectionId })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_EventSections_Sections");            
+                .HasConstraintName("FK_Customers_Venues");
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -138,12 +112,33 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Events)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Events_Venues");            
+                .HasConstraintName("FK_Events_Venues");
+        });
+
+        modelBuilder.Entity<EventSection>(entity =>
+        {
+            entity.HasKey(e => new { e.VenueId, e.EventId, e.SectionId }).HasName("PK__EventSec__5843467B739222C2");
+
+            entity.Property(e => e.Price).HasColumnType("money");
+            entity.Property(e => e.RowVersion)
+                .IsRowVersion()
+                .IsConcurrencyToken();
+
+            entity.HasOne(d => d.Event).WithMany(p => p.EventSections)
+                .HasForeignKey(d => new { d.VenueId, d.EventId })
+                .HasConstraintName("FK_EventSections_Events");
+
+            entity.HasOne(d => d.Section).WithMany(p => p.EventSections)
+                .HasForeignKey(d => new { d.VenueId, d.SectionId })
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EventSections_Sections");
         });
 
         modelBuilder.Entity<LastExtracted>(entity =>
         {
             entity.HasKey(e => e.Lock);
+
+            entity.ToTable("LastExtracted");
 
             entity.Property(e => e.Lock)
                 .HasMaxLength(1)
@@ -185,7 +180,25 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Sections)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Sections_Venues");            
+                .HasConstraintName("FK_Sections_Venues");
+        });
+
+        modelBuilder.Entity<Ticket>(entity =>
+        {
+            entity.HasKey(e => new { e.VenueId, e.TicketId }).HasName("PK__Tickets__5B45299237B875E3");
+
+            entity.HasIndex(e => new { e.VenueId, e.EventId, e.SectionId, e.RowNumber, e.SeatNumber }, "AK_Venue_Event_Seat_Ticket").IsUnique();
+
+            entity.Property(e => e.TicketId).ValueGeneratedOnAdd();
+
+            entity.HasOne(d => d.TicketPurchase).WithMany(p => p.Tickets)
+                .HasForeignKey(d => new { d.VenueId, d.TicketPurchaseId })
+                .HasConstraintName("FK_Tickets_TicketPurchases");
+
+            entity.HasOne(d => d.EventSection).WithMany(p => p.Tickets)
+                .HasForeignKey(d => new { d.VenueId, d.EventId, d.SectionId })
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Tickets_EventSections");
         });
 
         modelBuilder.Entity<TicketPurchase>(entity =>
@@ -200,59 +213,14 @@ public partial class BMProjekt2024Context : DbContext
                 .IsRowVersion()
                 .IsConcurrencyToken();
 
-            entity.HasOne(d => d.Customers).WithMany(p => p.TicketPurchases)
+            entity.HasOne(d => d.Customer).WithMany(p => p.TicketPurchases)
                 .HasForeignKey(d => new { d.VenueId, d.CustomerId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TicketPurchases_Customers");            
-        });
-
-        modelBuilder.Entity<Ticket>(entity =>
-        {
-            entity.HasKey(e => new { e.VenueId, e.TicketId }).HasName("PK__Tickets__5B45299237B875E3");
-
-            entity.HasIndex(e => new { e.VenueId, e.EventId, e.SectionId, e.RowNumber, e.SeatNumber }, "AK_Venue_Event_Seat_Ticket").IsUnique();
-
-            entity.Property(e => e.TicketId).ValueGeneratedOnAdd();
-
-            entity.HasOne(d => d.TicketPurchases).WithMany(p => p.Tickets)
-                .HasForeignKey(d => new { d.VenueId, d.TicketPurchaseId })
-                .HasConstraintName("FK_Tickets_TicketPurchases");
-
-            entity.HasOne(d => d.EventSections).WithMany(p => p.Tickets)
-                .HasForeignKey(d => new { d.VenueId, d.EventId, d.SectionId })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Tickets_EventSections");            
-        });
-
-        modelBuilder.Entity<VenueType_>(entity =>
-        {
-            entity.HasKey(e => e.VenueType).HasName("PK__VenueTyp__265E44FD77014281");
-
-            entity.HasIndex(e => new { e.VenueTypeName, e.Language }, "AK_VenueType_VenueTypeName_Language").IsUnique();
-
-            entity.Property(e => e.VenueType).HasMaxLength(30);
-            entity.Property(e => e.EventTypeName)
-                .IsRequired()
-                .HasMaxLength(30);
-            entity.Property(e => e.EventTypeShortName)
-                .IsRequired()
-                .HasMaxLength(20);
-            entity.Property(e => e.EventTypeShortNamePlural)
-                .IsRequired()
-                .HasMaxLength(20);
-            entity.Property(e => e.Language)
-                .IsRequired()
-                .HasMaxLength(10);
-            entity.Property(e => e.VenueTypeName)
-                .IsRequired()
-                .HasMaxLength(30);
-            
+                .HasConstraintName("FK_TicketPurchases_Customers");
         });
 
         modelBuilder.Entity<Venue>(entity =>
         {
-            entity.HasKey(e => e.VenueId);
-
             entity.Property(e => e.VenueId).ValueGeneratedNever();
             entity.Property(e => e.AdminEmail)
                 .IsRequired()
@@ -283,7 +251,33 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.VenueTypeNavigation).WithMany(p => p.Venues)
                 .HasForeignKey(d => d.VenueType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Venues_VenueTypes");            
+                .HasConstraintName("FK_Venues_VenueTypes");
+        });
+
+        modelBuilder.Entity<VenueType>(entity =>
+        {
+            entity.HasKey(e => e.VenueType1).HasName("PK__VenueTyp__265E44FD77014281");
+
+            entity.HasIndex(e => new { e.VenueTypeName, e.Language }, "AK_VenueType_VenueTypeName_Language").IsUnique();
+
+            entity.Property(e => e.VenueType1)
+                .HasMaxLength(30)
+                .HasColumnName("VenueType");
+            entity.Property(e => e.EventTypeName)
+                .IsRequired()
+                .HasMaxLength(30);
+            entity.Property(e => e.EventTypeShortName)
+                .IsRequired()
+                .HasMaxLength(20);
+            entity.Property(e => e.EventTypeShortNamePlural)
+                .IsRequired()
+                .HasMaxLength(20);
+            entity.Property(e => e.Language)
+                .IsRequired()
+                .HasMaxLength(10);
+            entity.Property(e => e.VenueTypeName)
+                .IsRequired()
+                .HasMaxLength(30);
         });
 
         OnModelCreatingPartial(modelBuilder);

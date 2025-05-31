@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace GraphQLserver.Models;
 
-public partial class VenueType_
+public partial class VenueType
 {
-    public string VenueType { get; set; }
+    public string VenueType1 { get; set; }
 
     public string VenueTypeName { get; set; }
 

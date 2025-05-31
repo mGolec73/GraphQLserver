@@ -85,7 +85,7 @@ namespace GraphQLserver.GraphQL
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<VenueType_> GetVenueTypes([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver) {
+        public IQueryable<VenueType> GetVenueTypes([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver) {
 
             var tenantId = tenantIdResolver.TenantId;
             return context.VenueTypes.Where(c => c.Venues.Any(v => v.VenueId == tenantId)); ; }

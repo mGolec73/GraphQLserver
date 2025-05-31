@@ -19,7 +19,7 @@ public partial class TicketPurchase
 
     public byte[] RowVersion { get; set; }
 
-    public virtual Customer Customers { get; set; }
+    public virtual Customer Customer { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
