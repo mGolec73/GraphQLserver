@@ -101,8 +101,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Customers)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Customers_Venues");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_Customers_Venues");            
 
         });
 
@@ -122,8 +121,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Section).WithMany(p => p.EventSections)
                 .HasForeignKey(d => new { d.VenueId, d.SectionId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_EventSections_Sections");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_EventSections_Sections");            
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -144,8 +142,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Events)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Events_Venues");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_Events_Venues");            
         });
 
         modelBuilder.Entity<LastExtracted>(entity =>
@@ -192,8 +189,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Venue).WithMany(p => p.Sections)
                 .HasForeignKey(d => d.VenueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Sections_Venues");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_Sections_Venues");            
         });
 
         modelBuilder.Entity<TicketPurchase>(entity =>
@@ -211,8 +207,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.Customers).WithMany(p => p.TicketPurchases)
                 .HasForeignKey(d => new { d.VenueId, d.CustomerId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TicketPurchases_Customers");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_TicketPurchases_Customers");            
         });
 
         modelBuilder.Entity<Ticket>(entity =>
@@ -230,8 +225,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.EventSections).WithMany(p => p.Tickets)
                 .HasForeignKey(d => new { d.VenueId, d.EventId, d.SectionId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Tickets_EventSections");
-            entity.HasQueryFilter(c => c.VenueId == _tenantId);
+                .HasConstraintName("FK_Tickets_EventSections");            
         });
 
         modelBuilder.Entity<VenueType_>(entity =>
@@ -293,8 +287,7 @@ public partial class BMProjekt2024Context : DbContext
             entity.HasOne(d => d.VenueTypeNavigation).WithMany(p => p.Venues)
                 .HasForeignKey(d => d.VenueType)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Venues_VenueTypes");
-            entity.HasQueryFilter(v => v.VenueId == _tenantId);
+                .HasConstraintName("FK_Venues_VenueTypes");            
         });
 
         OnModelCreatingPartial(modelBuilder);
