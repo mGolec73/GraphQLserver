@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
-builder.Services.AddHttpContextAccessor(); // Provides access to HttpContext
+builder.Services.AddHttpContextAccessor(); 
 builder.Services.AddScoped<ITenantIdResolverService, HeaderTenantIdResolverService>();
 
 // Register GraphQL services

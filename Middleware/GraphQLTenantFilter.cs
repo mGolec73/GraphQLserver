@@ -19,7 +19,7 @@ namespace GraphQLserver.Middleware
         {
             var tenantId = tenantIdResolver.TenantId;
 
-            // Provjeri je li rezultat queryable i dodaj filter
+           
             if (context.Result is IQueryable<Venue> queryable)
             {
                 context.Result = queryable.Where(v => v.VenueId == tenantId);
