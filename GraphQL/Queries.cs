@@ -96,7 +96,7 @@ namespace GraphQLserver.GraphQL
         public IQueryable<Venue> GetVenues([Service] BMProjekt2024Context context, [Service] ITenantIdResolverService tenantIdResolver)
         {
             var tenantId = tenantIdResolver.TenantId;
-            return context.Venues.Where(e => e.VenueId == tenantId);
+            return context.Venues;
         }
     }
 }
