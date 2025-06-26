@@ -8,12 +8,8 @@ namespace GraphQLserver.Models;
 public partial class Country
 {
     public string CountryCode { get; set; }
-
     public string CountryName { get; set; }
-
     public string Language { get; set; }
-
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
-
     public virtual ICollection<Venue> Venues { get; set; } = new List<Venue>();
 }
