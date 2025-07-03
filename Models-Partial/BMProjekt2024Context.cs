@@ -14,7 +14,8 @@ public partial class BMProjekt2024Context
   private readonly int? _tenantId;
 
 
-  public BMProjekt2024Context(DbContextOptions<BMProjekt2024Context> options, [Service] ITenantIdResolverService tenantidresolver)
+  public BMProjekt2024Context(DbContextOptions<BMProjekt2024Context> options, 
+      [Service] ITenantIdResolverService tenantidresolver)
       : base(options)
   {
     _tenantId = tenantidresolver.TenantId;

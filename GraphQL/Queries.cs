@@ -21,57 +21,44 @@ namespace GraphQLserver.GraphQL
    
     public class Queries
     {
+        //[UseOffsetPaging]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<Country> GetCountries([Service] BMProjekt2024Context dbContext,IResolverContext context)
+        public IQueryable<Country> GetCountries([Service] BMProjekt2024Context dbContext)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
-            var countries = dbContext.Countries;
-            return  countries;
+
+            return dbContext.Countries;
         }
 
-        
-        
+
+       // [UseOffsetPaging]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<Customer> GetCustomers([Service] BMProjekt2024Context dbContext, IResolverContext context) {
+        public IQueryable<Customer> GetCustomers([Service] BMProjekt2024Context dbContext) {
 
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
             return dbContext.Customers;
-                //.Where(cu => cu.VenueId == tenantId); 
+                
         }
- 
-        
+
+        //[UseOffsetPaging]
         [UseProjection]
         [UseFiltering]
         [UseSorting]
         public IQueryable<EventSection> GetEventSections([Service] BMProjekt2024Context dbContext, IResolverContext context)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
-            return dbContext.EventSections.Where(es => es.VenueId == tenantId);
+
+            return dbContext.EventSections;
         }
-        
+        //[UseOffsetPaging]
         [UseProjection]
         [UseFiltering]
         [UseSorting]  
         public IQueryable<Event> GetEvents([Service] BMProjekt2024Context dbContext, IResolverContext context)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
-            return dbContext.Events.Where(e => e.VenueId == tenantId); ;
+         
+            return dbContext.Events; ;
         }
  
         [UseProjection]
@@ -79,11 +66,8 @@ namespace GraphQLserver.GraphQL
         [UseSorting]
         public IQueryable<Section> GetSections([Service] BMProjekt2024Context dbContext, IResolverContext context)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
-            return dbContext.Sections.Where(s => s.VenueId == tenantId);
+            
+            return dbContext.Sections;
         }
      
         [UseProjection]
@@ -91,11 +75,8 @@ namespace GraphQLserver.GraphQL
         [UseSorting]
         public IQueryable<Ticket> GetTickets([Service] BMProjekt2024Context dbContext, IResolverContext context)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
-            return dbContext.Tickets.Where(t => t.VenueId == tenantId);
+
+            return dbContext.Tickets;
         }
 
         [UseProjection]
@@ -103,12 +84,9 @@ namespace GraphQLserver.GraphQL
         [UseSorting]
         public IQueryable<VenueType> GetVenueTypes([Service] BMProjekt2024Context dbContext, IResolverContext context) {
 
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
+        
             return dbContext.VenueTypes;
-                //Where(c => c.Venues.Any(v => v.VenueId == tenantId));
+                
                 }
         
         [UseProjection]
@@ -116,10 +94,7 @@ namespace GraphQLserver.GraphQL
         [UseSorting]
         public IQueryable<Venue> GetVenues([Service] BMProjekt2024Context dbContext, IResolverContext context)
         {
-            if (!context.ContextData.TryGetValue("TenantId", out var tenantIdObj) || tenantIdObj is not int tenantId)
-            {
-                throw new GraphQLException("Tenant ID nije pronađen u kontekstu.");
-            }
+           
             return dbContext.Venues;
         }
     }
